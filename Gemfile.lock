@@ -95,7 +95,7 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    diff-lcs (1.5.0)
+    diff-lcs (1.5.1)
     drb (2.2.1)
     erubi (1.13.0)
     factory_bot (6.2.1)
@@ -246,6 +246,7 @@ DEPENDENCIES
   bootsnap
   database_cleaner
   debug
+  diff-lcs (~> 1.5.1)
   factory_bot_rails
   pry-rails
   puma (>= 5.0)
