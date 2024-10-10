@@ -1,7 +1,12 @@
 class ApplicationController < ActionController::API
   def authenticate_user!
-    api_key = ApiKey.find_by(token: request.session[:token])
+    token = request.headers['Authorization']&.split(' ')&.last
+    api_key = ApiKey.find_by(token: token)
     @current_user = api_key&.bearer
-    head :unauthorized unless @current_user if @current_user.nil?
+    head :unauthorized unless @current_user
+  end
+
+  def current_user
+    @current_user
   end
 end
