@@ -5,19 +5,30 @@ class DevicesController < ApplicationController
   def assign
     AssignDeviceToUser.new(
       requesting_user: @current_user,
-      serial_number: params[:serial_number],
-      new_device_owner_id: params[:new_device_owner_id]
+      serial_number: device_params[:serial_number],
+      new_device_owner_id: device_params[:new_owner_id]
     ).call
     head :ok
+  rescue RegistrationError::Unauthorized => e
+    render json: { error: e.message }, status: :unauthorized
+  rescue AssigningError::AlreadyUsedOnUser, AssigningError::AlreadyUsedOnOtherUser => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   def unassign
-    # TODO: implement the unassign action
+    ReturnDeviceFromUser.new(
+      user: @current_user,
+      serial_number: device_params[:serial_number],
+      from_user: @current_user.id
+    ).call
+    head :ok
+  rescue ReturningError::Unauthorized, ReturningError::DeviceNotFound => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private
 
   def device_params
-    params.permit(:new_owner_id, :serial_number)
+    params.require(:device).permit(:new_owner_id, :serial_number)
   end
 end
