@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_09_135853) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_10_100928) do
   create_table "api_keys", force: :cascade do |t|
     t.integer "bearer_id", null: false
     t.string "bearer_type", null: false
@@ -22,10 +22,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_09_135853) do
   end
 
   create_table "devices", force: :cascade do |t|
-    t.string "serial_number"
+    t.string "serial_number", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.index ["serial_number"], name: "index_devices_on_serial_number", unique: true
     t.index ["user_id"], name: "index_devices_on_user_id"
   end
 
@@ -35,6 +36,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_09_135853) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["device_id"], name: "index_returned_devices_on_device_id"
+    t.index ["user_id", "device_id"], name: "index_returned_devices_on_user_id_and_device_id", unique: true
     t.index ["user_id"], name: "index_returned_devices_on_user_id"
   end
 
